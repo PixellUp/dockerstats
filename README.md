@@ -71,49 +71,101 @@ I also created a full blown system information library (including all docker sta
 
 ### Function Reference and OS Support
 
-| function        | Comments |
-| -------------- | ------- |
-| ds.dockerContainers(all, cb) | returns array of active/all docker containers |
-| - [0].id | ID of container |
-| - [0].name | name of container |
-| - [0].image | name of image |
-| - [0].imageID | ID of image |
-| - [0].command | command |
-| - [0].created | creation time |
-| - [0].state | created, running, exited |
-| - [0].ports | array of ports |
-| - [0].mounts | array of mounts |
-| ds.dockerContainerStats(id, cb) | statistics for a specific container |
-| - id | Container ID |
-| - mem_usage | memory usage in bytes |
-| - mem_limit | memory limit (max mem) in bytes |
-| - mem_percent | memory usage in percent |
-| - cpu_percent | cpu usage in percent |
-| - pids | number of processes |
-| - netIO.rx | received bytes via network |
-| - netIO.wx | sent bytes via network |
-| - blockIO.r | bytes read from BlockIO |
-| - blockIO.w | bytes written to BlockIO |
-| - cpu_stats | detailed cpu stats |
-| - percpu_stats | detailed per cpu stats |
-| - memory_stats | detailed memory stats |
-| - networks | detailed network stats per interface |
-| ds.dockerContainerProcesses(id, cb) | array of processes inside a container |
-| - [0].pid_host | process ID (host) |
-| - [0].ppid | parent process ID |
-| - [0].pgid | process group ID |
-| - [0].user | effective user name |
-| - [0].ruser | real user name |
-| - [0].group | effective group name |
-| - [0].rgroup | real group name |
-| - [0].stat | process state |
-| - [0].time | accumulated CPU time |
-| - [0].elapsed | elapsed running time |
-| - [0].nice |  nice value |
-| - [0].rss | resident set size |
-| - [0].vsz | virtual size in Kbytes |
-| - [0].command | command and arguments |
-| si.dockerAll(cb) | list of all containers including their stats<br>and processes in one single array |
+| Function        | Result object | Comments |
+| --------------- | ------------- | -------- |
+| si.dockerInfo(cb) | {...} | returns general docker info |
+| | id | Docker ID |
+| | containers | number of containers |
+| | containersRunning | number of running containers |
+| | containersPaused | number of paused containers |
+| | containersStopped | number of stopped containers |
+| | images | number of images |
+| | driver | driver (e.g. 'devicemapper', 'overlay2') |
+| | memoryLimit | has memory limit |
+| | swapLimit | has swap limit |
+| | kernelMemory | has kernal memory |
+| | cpuCfsPeriod | has CpuCfsPeriod |
+| | cpuCfsQuota | has CpuCfsQuota |
+| | cpuShares | has CPUShares |
+| | cpuSet | has CPUShares |
+| | ipv4Forwarding | has IPv4Forwarding |
+| | bridgeNfIptables | has BridgeNfIptables |
+| | bridgeNfIp6tables | has BridgeNfIp6tables |
+| | debug | Debug on |
+| | nfd | named data networking forwarding daemon |
+| | oomKillDisable | out-of-memory kill disabled |
+| | ngoroutines | number NGoroutines |
+| | systemTime | docker SystemTime |
+| | loggingDriver | logging driver e.g. 'json-file' |
+| | cgroupDriver | cgroup driver e.g. 'cgroupfs' |
+| | nEventsListener | number NEventsListeners |
+| | kernelVersion | docker kernel version |
+| | operatingSystem | docker OS e.g. 'Docker for Mac' |
+| | osType | OSType e.g. 'linux' |
+| | architecture | architecture e.g. x86_64 |
+| | ncpu | number of CPUs |
+| | memTotal | memory total |
+| | dockerRootDir | docker root directory |
+| | httpProxy | http proxy |
+| | httpsProxy | https proxy |
+| | noProxy | NoProxy |
+| | name | Name |
+| | labels | array of labels |
+| | experimentalBuild | is experimental build |
+| | serverVersion | server version |
+| | clusterStore | cluster store |
+| | clusterAdvertise | cluster advertise |
+| | defaultRuntime | default runtime e.g. 'runc' |
+| | liveRestoreEnabled | live store enabled |
+| | isolation | isolation |
+| | initBinary | init binary |
+| | productLicense | product license |
+| si.dockerContainers(all, cb) | [{...}] | returns array of active/all docker containers |
+| | [0].id | ID of container |
+| | [0].name | name of container |
+| | [0].image | name of image |
+| | [0].imageID | ID of image |
+| | [0].command | command |
+| | [0].created | creation time (unix) |
+| | [0].started | creation time (unix) |
+| | [0].finished | creation time (unix) |
+| | [0].createdAt | creation date time string |
+| | [0].startedAt | creation date time string |
+| | [0].finishedAt | creation date time string |
+| | [0].state | created, running, exited |
+| | [0].ports | array of ports |
+| | [0].mounts | array of mounts |
+| si.dockerContainerStats(ids, cb) | [{...}] | statistics for specific containers<br>container IDs: space or comma separated,<br>pass '*' for all containers|
+| | [0].id | Container ID |
+| | [0].mem_usage | memory usage in bytes |
+| | [0].mem_limit | memory limit (max mem) in bytes |
+| | [0].mem_percent | memory usage in percent |
+| | [0].cpu_percent | cpu usage in percent |
+| | [0].pids | number of processes |
+| | [0].netIO.rx | received bytes via network |
+| | [0].netIO.wx | sent bytes via network |
+| | [0].blockIO.r | bytes read from BlockIO |
+| | [0].blockIO.w | bytes written to BlockIO |
+| | [0].cpu_stats | detailed cpu stats |
+| | [0].percpu_stats | detailed per cpu stats |
+| | [0].memory_stats | detailed memory stats |
+| | [0].networks | detailed network stats per interface |
+| si.dockerContainerProcesses(id, cb) | [{...}] | array of processes inside a container |
+| | [0].pid_host | process ID (host) |
+| | [0].ppid | parent process ID |
+| | [0].pgid | process group ID |
+| | [0].user | effective user name |
+| | [0].ruser | real user name |
+| | [0].group | effective group name |
+| | [0].rgroup | real group name |
+| | [0].stat | process state |
+| | [0].time | accumulated CPU time |
+| | [0].elapsed | elapsed running time |
+| | [0].nice | nice value |
+| | [0].rss | resident set size |
+| | [0].vsz | virtual size in Kbytes |
+| | [0].command | command and arguments |
+| si.dockerAll(cb) | {...} | list of all containers including their stats<br>and processes in one single array |
 
 ### cb: Asynchronous Function Calls (callback)
 
@@ -124,7 +176,7 @@ Remember: all functions are implemented as asynchronous functions! There are now
 ```js
 // assuming you have a container with ID 'ae8a76'
 
-var dockerstats = require('dockerstats');
+const dockerstats = require('dockerstats');
 
 dockerstats.dockerContainerStats('ae8a76', function(data) {
 	console.log('Docker Container Stats:');
@@ -138,12 +190,14 @@ dockerstats.dockerContainerStats('ae8a76', function(data) {
 
 ### Promises
 
-**Promises Style** is new in version 3.0.
+**Promises Style**
 
 When omitting callback parameter (cb), then you can use all function in a promise oriented way. All functions are returning a promise, that you can consume:
 
 ```js
 // assuming you have a container with ID 'ae8a76'
+
+const dockerstats = require('dockerstats');
 
 dockerstats.dockerContainerStats('ae8a76')
   .then(data => {
@@ -158,10 +212,43 @@ dockerstats.dockerContainerStats('ae8a76')
 
 ```
 
+### Async / Await
+
+**Using async / await** (available since node v7.6)
+
+Since node v7.6 you can also use the `async` / `await` pattern. The above example would then look like this:
+
+```js
+// assuming you have a container with ID 'ae8a76'
+
+const dockerstats = require('dockerstats');
+
+async function dockerContainerData() {
+    try {
+        const data = await dockerstats.dockerContainerStats('ae8a76');
+        console.log('Docker Container Stats:');
+        console.log('- ID: ' + data.id);
+        console.log('- Mem usage: ' + data.mem_usage);
+        console.log('- Mem limit: ' + data.mem_limit);
+        console.log('- Mem usage %: ' + data.mem_percent);
+        console.log('- CPU usage %: ' + data.cpu_percent);
+        console.log('...');
+    } catch (e) {
+        console.log(e)
+    }
+}
+```
+
 ## Version history
 
 | Version        | Date           | Comment  |
 | -------------- | -------------- | -------- |
+| 1.4.4          | 2021-01-02     | `dockerContainerStats` fix `tx` changed to `wx` as documented |
+| 1.4.3          | 2020-12-03     | `typescript` definitions fix |
+| 1.4.2          | 2020-10-16     | `dockerContainers()` resolved hanging issue |
+| 1.4.1          | 2019-05-31     | `dockerInfo()` changed property naming style |
+| 1.4.0          | 2019-05-30     | added typescript definitions, updated docs |
+| 1.3.0          | 2019-05-29     | added `dockerInfo()`, `dockerContainers()`<br>added started, finished time, restartCount |
 | 1.2.8          | 2018-12-03     | updated package.json (files) |
 | 1.2.7          | 2018-12-03     | updated docs |
 | 1.2.6          | 2018-11-21     | updated docs |
@@ -178,7 +265,6 @@ dockerstats.dockerContainerStats('ae8a76')
 
 If you have ideas or comments, please do not hesitate to contact me.
 
-
 Happy monitoring!
 
 Sincerely,
@@ -191,21 +277,21 @@ Written by Sebastian Hildebrandt [sebhildebrandt](https://github.com/sebhildebra
 
 #### Contributers
 
-- none so far
+- toolcreator [toolcreator](https://github.com/toolcreator)
 
 ## Copyright Information
 
-Linux is a registered trademark of Linus Torvalds, OS X is a registered trademark of Apple Inc.,
+Linux is a registered trademark of Linus Torvalds. macOS, OS X is a registered trademark of Apple Inc.,
 Windows is a registered trademark of Microsoft Corporation. Node.js is a trademark of Joyent Inc.,
-Intel is a trademark of Intel Corporation, Raspberry Pi is a trademark of the Raspberry Pi Foundation,
-Debian is a trademark of the Debian Project, Ubuntu is a trademark of Canonical Ltd., Docker is a trademark of Docker, Inc.
+Intel is a trademark of Intel Corporation. Raspberry Pi is a trademark of the Raspberry Pi Foundation.
+Debian is a trademark of the Debian Project. Ubuntu is a trademark of Canonical Ltd., Docker is a trademark of Docker, Inc.
 All other trademarks are the property of their respective owners.
 
 ## License [![MIT license][license-img]][license-url]
 
 >The [`MIT`][license-url] License (MIT)
 >
->Copyright &copy; 2018 Sebastian Hildebrandt, [+innovations](http://www.plus-innovations.com).
+>Copyright &copy; 2021 Sebastian Hildebrandt, [+innovations](http://www.plus-innovations.com).
 >
 >Permission is hereby granted, free of charge, to any person obtaining a copy
 >of this software and associated documentation files (the "Software"), to deal
